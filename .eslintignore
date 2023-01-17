@@ -1,0 +1,5 @@
+src/_remote_base
+src/_cmn_dev
+src/vendor
+
+**/*.d.ts

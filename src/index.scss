@@ -1,0 +1,213 @@
+html {
+  color: #000;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  background: #fff;
+  -webkit-touch-callout: none;
+}
+
+body {
+  height: 100%;
+  overflow: auto;
+  font-family: "Penrose", "PingFang SC", "HanHei SC", "Helvetica", "Microsoft YaHei", "黑体", sans-serif;
+  word-break: break-word;
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  border: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none !important;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+figure,
+th,
+td {
+  padding: 0;
+  margin: 0;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+fieldset,
+img {
+  border: 0;
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+strong,
+th,
+var,
+optgroup {
+  font-style: inherit;
+  font-weight: inherit;
+}
+
+del,
+ins {
+  text-decoration: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+i,
+em {
+  font-style: normal;
+  font-weight: normal;
+}
+
+ul {
+  list-style: none;
+}
+
+caption,
+th {
+  text-align: left;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+q::before,
+q::after {
+  content: "";
+}
+
+abbr,
+acronym {
+  font-variant: normal;
+  border: 0;
+}
+
+sup {
+  vertical-align: baseline;
+}
+
+sub {
+  vertical-align: baseline;
+}
+
+legend {
+  color: #000;
+}
+
+input,
+button,
+textarea,
+select,
+optgroup,
+option {
+  font-family: inherit;
+
+  /* font-size: inherit; */
+  font-style: inherit;
+  font-weight: inherit;
+}
+
+input,
+button,
+textarea,
+select {
+  *font-size: 100%;
+}
+
+*:focus {
+  outline: none;
+}
+
+img {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  /* stylelint-disable-next-line */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+  vertical-align: top;
+}
+
+/* 防止图片加载过程出现裂图 */
+img[src=""],
+img:not([src]) {
+  opacity: 0;
+}
+
+/* 全局设置滚动条样式 */
+$scrollbar-bg: rgba(49, 52, 56, 0.12);
+$scrollbar-bg-hover: rgba(49, 52, 56, 0.2);
+
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+  transform: translate3d(0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background-color: $scrollbar-bg;
+  background-clip: content-box;
+  border: 2px solid transparent;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: $scrollbar-bg-hover;
+  }
+}
