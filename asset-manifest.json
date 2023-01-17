@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/dctool/static/css/main.4c3be66d.css",
+    "main.js": "/dctool/static/js/main.a724d580.js",
+    "static/js/787.b3086623.chunk.js": "/dctool/static/js/787.b3086623.chunk.js",
+    "index.html": "/dctool/index.html",
+    "main.4c3be66d.css.map": "/dctool/static/css/main.4c3be66d.css.map",
+    "main.a724d580.js.map": "/dctool/static/js/main.a724d580.js.map",
+    "787.b3086623.chunk.js.map": "/dctool/static/js/787.b3086623.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4c3be66d.css",
+    "static/js/main.a724d580.js"
+  ]
+}
