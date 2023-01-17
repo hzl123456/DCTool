@@ -2,6 +2,7 @@
   "name": "dctool",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://hzl123456.github.io/dctool",
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^27.5.2",
