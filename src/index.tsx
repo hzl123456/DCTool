@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -11,12 +11,12 @@ import './index.scss';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <BrowserRouter>
+  <HashRouter>
     <Routes>
       <Route path="/segmentation" element={<LargeFileSegmentationPage />} />
       <Route path="*" element={<LargeFileSegmentationPage />} />
     </Routes>
-  </BrowserRouter>
+  </HashRouter>
 );
 
 reportWebVitals();
