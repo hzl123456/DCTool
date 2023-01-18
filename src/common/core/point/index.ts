@@ -13,7 +13,7 @@ async function getIP() {
   // 获取一个 ip 数据
   let ip = '';
   try {
-    ip = (await axios.get('https://api.ipify.org')).data;
+    ip = (await axios.get('https://ipapi.co/json')).data.ip as string;
   } catch {
     // do nothing
   }
