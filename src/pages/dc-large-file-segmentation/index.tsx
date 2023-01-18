@@ -8,6 +8,10 @@ import { UploadIcon } from '@qunhe/muya-theme-light';
 import FileSaver from 'file-saver';
 import JSZip from 'jszip';
 
+import { collectData } from '../../common/core/point';
+
+import { formatSizeUnits } from '../../common/utils';
+
 import './index.scss';
 
 const LargeFileSegmentationPage = () => {
@@ -38,9 +42,29 @@ const LargeFileSegmentationPage = () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
           FileSaver.saveAs(content, `${fileName}.zip`);
           toast.success('文件分割完成，请保存在本地进行查看~');
+          // 埋点成功的上报
+          collectData({
+            key: 'LargeFileSegmentation',
+            moduleName: 'Success',
+            info: {
+              fileName: file.name,
+              fileSize: formatSizeUnits(file.size),
+              count,
+            },
+          });
         });
       } catch {
         toast.error('文件分割失败，请联系胖虎处理~');
+        // 埋点失败的上报
+        collectData({
+          key: 'LargeFileSegmentation',
+          moduleName: 'Error',
+          info: {
+            fileName: file.name,
+            fileSize: formatSizeUnits(file.size),
+            count,
+          },
+        });
       } finally {
         setLoading(false);
       }
