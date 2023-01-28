@@ -8,9 +8,9 @@ import { UploadIcon } from '@qunhe/muya-theme-light';
 import FileSaver from 'file-saver';
 import JSZip from 'jszip';
 
-import { collectData } from '../../common/core/point';
+import { collectData } from '@common/core/point';
 
-import { formatSizeUnits } from '../../common/utils';
+import { formatSizeUnits } from '@common/utils';
 
 import './index.scss';
 
