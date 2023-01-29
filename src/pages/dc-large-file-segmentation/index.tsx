@@ -12,6 +12,8 @@ import { collectData } from '@common/core/point';
 
 import { formatSizeUnits } from '@common/utils';
 
+import { sendMessageByWebhook } from '@common/core/notice';
+
 import './index.scss';
 
 const LargeFileSegmentationPage = () => {
@@ -52,6 +54,10 @@ const LargeFileSegmentationPage = () => {
               count,
             },
           });
+          // 机器人通知
+          sendMessageByWebhook(
+            `胖虎分割文件成功\n文件名称：${file.name}\n文件大小：${formatSizeUnits(file.size)}\n分割数量：${count}`
+          );
         });
       } catch {
         toast.error('文件分割失败，请联系胖虎处理~');
@@ -65,6 +71,10 @@ const LargeFileSegmentationPage = () => {
             count,
           },
         });
+        // 机器人通知
+        sendMessageByWebhook(
+          `胖虎分割文件失败\n文件名称：${file.name}\n文件大小：${formatSizeUnits(file.size)}\n分割数量：${count}`
+        );
       } finally {
         setLoading(false);
       }
