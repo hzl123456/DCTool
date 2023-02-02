@@ -7,6 +7,7 @@ import Bmob from 'hydrogen-js-sdk';
 import reportWebVitals from './reportWebVitals';
 
 import LargeFileSegmentationPage from './pages/dc-large-file-segmentation';
+import FileDuplicateRemovePage from './pages/dc-file-duplicate-remove';
 
 import './index.scss';
 
@@ -18,6 +19,7 @@ root.render(
   <HashRouter>
     <Routes>
       <Route path="/segmentation" element={<LargeFileSegmentationPage />} />
+      <Route path="/duplicateRemove" element={<FileDuplicateRemovePage />} />
       <Route path="*" element={<LargeFileSegmentationPage />} />
     </Routes>
   </HashRouter>

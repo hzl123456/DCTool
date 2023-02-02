@@ -3,10 +3,9 @@
  * @Date: 2023/1/17 14:39
  */
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { Button, Form, InputNumber, toast, Upload } from '@qunhe/muya-ui';
+import { Button, Form, InputNumber, Input, toast, Upload } from '@qunhe/muya-ui';
 import { UploadIcon } from '@qunhe/muya-theme-light';
 import FileSaver from 'file-saver';
-import JSZip from 'jszip';
 
 import { collectData } from '@common/core/point';
 
@@ -16,17 +15,18 @@ import { sendMessageByWebhook } from '@common/core/notice';
 
 import './index.scss';
 
-const LargeFileSegmentationPage = () => {
+const FileDuplicateRemovePage = () => {
   useEffect(() => {
-    document.title = '杜晨工具-大型文件分割';
+    document.title = '杜晨工具-文件去重';
   }, []);
 
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback((values: any) => {
     const {
-      count,
       file: [targetFile],
+      row,
+      dot,
     } = values;
     const file = targetFile.originFile as File;
     const [fileName, fileEnd] = file.name.split('.');
@@ -35,49 +35,55 @@ const LargeFileSegmentationPage = () => {
     fileReader.readAsText(file);
     fileReader.onload = () => {
       try {
-        const fileTextArray = (fileReader.result as string).split('\n');
-        const fileTextLength = fileTextArray.length;
-        const fileDataLength = Math.floor(fileTextLength / count);
-        let index = 1;
-        const zip = new JSZip();
-        for (let i = 0; i < fileTextLength; i += fileDataLength) {
-          // 添加一个文件
-          zip.file(`${fileName}-文件${index++}.${fileEnd}`, fileTextArray.slice(i, i + fileDataLength).join('\n'));
+        const data: string[] = (fileReader.result as string).split('\n');
+        // 通过 map 进行数据的去重
+        const dataMap = new Map();
+        for (const child of data) {
+          dataMap.set(child.split(dot)?.[row - 1], child);
         }
-        // 转成压缩包然后进行保存
-        zip.generateAsync({ type: 'blob' }).then((content) => {
-          FileSaver.saveAs(content, `${fileName}.zip`);
-          toast.success('文件分割完成，请保存在本地进行查看~');
-          // 埋点成功的上报
-          collectData({
-            key: 'LargeFileSegmentation',
-            moduleName: 'Success',
-            info: {
-              fileName: file.name,
-              fileSize: formatSizeUnits(file.size),
-              count,
-            },
-          });
-          // 机器人通知
-          sendMessageByWebhook(
-            `胖虎分割文件成功\n文件名称：${file.name}\n文件大小：${formatSizeUnits(file.size)}\n分割数量：${count}`
-          );
-        });
-      } catch {
-        toast.error('文件分割失败，请联系胖虎处理~');
-        // 埋点失败的上报
+        // 重新得到新的数据
+        const newData: string[] = [];
+        for (const child of dataMap.values()) {
+          newData.push(child);
+        }
+        // 本地保存文件
+        FileSaver.saveAs(new Blob([newData.join('\n')]), `${fileName}-去重后.${fileEnd}`);
+        toast.success('文件去重完成，请保存在本地进行查看~');
+        // 埋点成功的上报
         collectData({
-          key: 'LargeFileSegmentation',
-          moduleName: 'Error',
+          key: 'FileDuplicateRemove',
+          moduleName: 'Success',
           info: {
             fileName: file.name,
             fileSize: formatSizeUnits(file.size),
-            count,
+            row,
+            dot,
           },
         });
         // 机器人通知
         sendMessageByWebhook(
-          `胖虎分割文件失败\n文件名称：${file.name}\n文件大小：${formatSizeUnits(file.size)}\n分割数量：${count}`
+          `胖虎去重文件成功\n文件名称：${file.name}\n文件大小：${formatSizeUnits(
+            file.size
+          )}\n第几列去重：${row}\n行分隔符：${dot}`
+        );
+      } catch {
+        toast.error('文件分割失败，请联系胖虎处理~');
+        // 埋点失败的上报
+        collectData({
+          key: 'FileDuplicateRemove',
+          moduleName: 'Error',
+          info: {
+            fileName: file.name,
+            fileSize: formatSizeUnits(file.size),
+            row,
+            dot,
+          },
+        });
+        // 机器人通知
+        sendMessageByWebhook(
+          `胖虎去重文件失败\n文件名称：${file.name}\n文件大小：${formatSizeUnits(
+            file.size
+          )}\n第几列去重：${row}\n行分隔符：${dot}`
         );
       } finally {
         setLoading(false);
@@ -87,8 +93,8 @@ const LargeFileSegmentationPage = () => {
 
   return (
     <div className="app">
-      <Form defaultValues={{ count: 2 }} onSubmit={handleSubmit} labelWidth={100}>
-        <Form.Item name="file" label="分割文件" rule={[{ type: 'any', required: true, message: '请选择分割文件' }]}>
+      <Form defaultValues={{ row: 1, dot: ',' }} onSubmit={handleSubmit} labelWidth={100}>
+        <Form.Item name="file" label="去重文件" rule={[{ type: 'any', required: true, message: '请选择分割文件' }]}>
           <Upload multiple={false} request={(option) => ({ ...option, abort: () => {} })}>
             {({ getInputProps, getRootProps, getResultProps, uploadFiles }) => {
               return (
@@ -119,8 +125,15 @@ const LargeFileSegmentationPage = () => {
             }}
           </Upload>
         </Form.Item>
-        <Form.Item name="count" label="分割份数" rule={[{ type: 'number', required: true, message: '请输入分割份数' }]}>
-          <InputNumber style={{ width: 300 }} min={2} precision={0} placeholder="请输入分割份数" />
+        <Form.Item
+          name="row"
+          label="第几列去重"
+          rule={[{ type: 'number', required: true, message: '请输入第几列去重' }]}
+        >
+          <InputNumber style={{ width: 300 }} min={1} precision={0} placeholder="请输入第几列去重" />
+        </Form.Item>
+        <Form.Item name="dot" label="行分隔符" rule={[{ type: 'string', required: true, message: '请输入行分隔符' }]}>
+          <Input style={{ width: 300 }} placeholder="请输入行分隔符" />
         </Form.Item>
         <Form.Item>
           <Button htmlType="reset">重置</Button>
@@ -133,4 +146,4 @@ const LargeFileSegmentationPage = () => {
   );
 };
 
-export default memo(LargeFileSegmentationPage);
+export default memo(FileDuplicateRemovePage);
