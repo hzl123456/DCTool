@@ -13,7 +13,7 @@ export interface IMixedItem {
   file: { originFile: File }[];
   dot: string;
   channelRow: number;
-  channelIds: string;
+  channelIds?: string;
   phoneRow: number;
   timeRow?: number; // 时间的区间
   timeRange?: Dayjs[]; // 时间范围

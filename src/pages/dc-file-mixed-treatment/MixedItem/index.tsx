@@ -71,13 +71,8 @@ const MixedItem = ({
       >
         <InputNumber style={{ width: 130 }} min={1} precision={0} placeholder="请输入渠道ID所属列" />
       </Form.Item>
-      <Form.Item
-        labelPosition="top"
-        name="channelIds"
-        label="渠道ID集合"
-        rule={[{ type: 'string', required: true, message: '请输入渠道ID集合' }]}
-      >
-        <Input style={{ width: 130 }} placeholder="用 | 进行分隔" />
+      <Form.Item labelPosition="top" name="channelIds" label="渠道ID（不填表示所有渠道）">
+        <Input style={{ width: 150 }} placeholder="用 | 进行分隔" />
       </Form.Item>
       <Form.Item
         labelPosition="top"

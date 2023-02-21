@@ -41,7 +41,7 @@ const MixedTreatmentPage = () => {
       const {
         file: [targetFile],
         dot,
-        channelIds, // 渠道 id，| 进行分割
+        channelIds: inputChannelIds = '', // 渠道 id，| 进行分割
         channelRow, // 渠道列
         phoneRow, // 手机号列
         timeRow = 1,
@@ -52,6 +52,22 @@ const MixedTreatmentPage = () => {
       fileReader.readAsText(file);
       fileReader.onload = () => {
         const data: string[] = (fileReader.result as string).split('\n');
+        // 0.如果 inputChannelIds 没有填写的话，先筛选出所有的渠道，注意移除第一行数据
+        let channelIds = inputChannelIds;
+        if (!channelIds) {
+          const channelIdSet = new Set<string>();
+          const channelIdList: string[] = [];
+          for (const text of data) {
+            const childData = text.split(dot);
+            const channelId = childData[channelRow - 1]!;
+            channelIdSet.add(channelId);
+          }
+          for (const channelId of channelIdSet.values()) {
+            channelIdList.push(channelId);
+          }
+          // 注意这里需要移除第一行的数据，因为那个是标题
+          channelIds = channelIdList.slice(1, channelIdList.length).join('|');
+        }
         // 1.根据渠道创建对应的列，并且需要有一个聚合的列
         const dataMap = new Map<string, Set<string>>();
         for (const channelId of channelIds.split('|')) {
