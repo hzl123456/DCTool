@@ -4,8 +4,8 @@
  */
 import type { IMixedData, IMixedItem } from '@src/pages/dc-file-mixed-treatment/types';
 
-import React, { memo, useCallback, useEffect, useState } from 'react';
-import { Button, Form, toast } from '@qunhe/muya-ui';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Form, toast, IFormBag } from '@qunhe/muya-ui';
 
 import dayjs from 'dayjs';
 
@@ -31,6 +31,7 @@ const MixedTreatmentPage = () => {
   }, []);
 
   const [values, setValues] = useState<IMixedData>({ data: [getDefaultItem()] });
+  const formBagRef = useRef<IFormBag<IMixedData>>(null);
 
   const getFileData = useCallback((data: IMixedItem) => {
     return new Promise<{
@@ -43,6 +44,8 @@ const MixedTreatmentPage = () => {
         channelIds, // 渠道 id，| 进行分割
         channelRow, // 渠道列
         phoneRow, // 手机号列
+        timeRow = 1,
+        timeRange = [],
       } = data;
       const file = targetFile!.originFile as File;
       const fileReader = new FileReader();
@@ -60,6 +63,20 @@ const MixedTreatmentPage = () => {
           const childData = text.split(dot);
           const channelId = childData[channelRow - 1]!;
           const phone = childData[phoneRow - 1]!;
+          // 如果存在 timeRange 的话需要根据时间进行筛选
+          if (timeRange.length === 2) {
+            try {
+              const time = childData[timeRow - 1]!;
+              const now = dayjs(time);
+              const start = timeRange[0]!;
+              const end = timeRange[1]!;
+              if (now.isBefore(start) || now.isAfter(end)) {
+                break;
+              }
+            } catch {
+              // do nothing
+            }
+          }
           if (dataMap.has(channelId)) {
             // 添加单列数据
             dataMap.get(channelId)?.add(phone);
@@ -88,19 +105,29 @@ const MixedTreatmentPage = () => {
           const exportData: any[] = [];
           for (const channelId of dataMap.keys()) {
             let i = 0;
-            for (const phone of dataMap.get(channelId)!.values()) {
-              if (!exportData[i]) {
-                exportData[i] = {};
-              }
+            if (!exportData[i]) {
+              exportData[i] = {};
+            }
+            const mapValue = dataMap.get(channelId)!;
+            if (mapValue.size === 0) {
               exportData[i] = {
                 ...exportData[i],
-                [channelId]: phone,
+                [channelId]: null,
               };
-              // 添加所有的手机号数据
-              totalSet.add(phone);
               i++;
+            } else {
+              for (const phone of mapValue.values()) {
+                exportData[i] = {
+                  ...exportData[i],
+                  [channelId]: phone,
+                };
+                // 添加所有的手机号数据
+                totalSet.add(phone);
+                i++;
+              }
             }
           }
+          console.log('ssss->', exportData);
           // 生成一个 excel
           const worksheet = XLSX.utils.json_to_sheet(exportData);
           XLSX.utils.book_append_sheet(workbook, worksheet, fileName);
@@ -125,8 +152,8 @@ const MixedTreatmentPage = () => {
         });
         // 机器人通知
         sendMessageByWebhook(`文件渠道混合处理成功\n文件名称：${fileNameList.join('、')}`);
-      } catch (e) {
-        toast.error('文件名称不能超过31个字符，请修改文件名称后重试');
+      } catch (e: any) {
+        toast.error(e?.message || '文件渠道混合处理失败，请联系胖虎');
       }
     },
     [getFileData]
@@ -134,7 +161,13 @@ const MixedTreatmentPage = () => {
 
   return (
     <div className="app">
-      <Form<IMixedData> values={values} onChange={setValues} onSubmit={handleSubmit} labelPosition="top">
+      <Form<IMixedData>
+        formBagRef={formBagRef}
+        values={values}
+        onChange={setValues}
+        onSubmit={handleSubmit}
+        labelPosition="top"
+      >
         <Form.Item
           name="data"
           label={

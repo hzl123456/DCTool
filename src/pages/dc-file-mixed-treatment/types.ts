@@ -2,6 +2,8 @@
  * @Author: linhe
  * @Date: 2023/2/13 18:25
  */
+import type { Dayjs } from 'dayjs';
+
 export interface IMixedData {
   data: IMixedItem[];
 }
@@ -13,4 +15,6 @@ export interface IMixedItem {
   channelRow: number;
   channelIds: string;
   phoneRow: number;
+  timeRow?: number; // 时间的区间
+  timeRange?: Dayjs[]; // 时间范围
 }

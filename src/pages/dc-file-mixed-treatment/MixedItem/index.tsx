@@ -5,7 +5,7 @@
 import type { IMixedItem } from '@src/pages/dc-file-mixed-treatment/types';
 
 import React, { Fragment, memo, useCallback } from 'react';
-import { Button, Form, Input, InputNumber, toast, Upload } from '@qunhe/muya-ui';
+import { Button, Form, Input, InputNumber, toast, Upload, RangeDateTimePicker } from '@qunhe/muya-ui';
 import { UploadIcon } from '@qunhe/muya-theme-light';
 
 const MixedItem = ({
@@ -28,7 +28,7 @@ const MixedItem = ({
         <Upload multiple={false} request={(option) => ({ ...option, abort: () => {} })}>
           {({ getInputProps, getRootProps, getResultProps, uploadFiles }) => {
             return (
-              <div style={{ width: 240 }}>
+              <div style={{ width: 200 }}>
                 {!!uploadFiles?.length ? (
                   <div>
                     {uploadFiles.map((file) => (
@@ -61,7 +61,7 @@ const MixedItem = ({
         label="行分隔符"
         rule={[{ type: 'string', required: true, message: '请输入行分隔符' }]}
       >
-        <Input style={{ width: 240 }} placeholder="请输入行分隔符" />
+        <Input style={{ width: 130 }} placeholder="请输入行分隔符" />
       </Form.Item>
       <Form.Item
         labelPosition="top"
@@ -69,7 +69,7 @@ const MixedItem = ({
         label="渠道ID所属列"
         rule={[{ type: 'number', required: true, message: '请输入渠道ID所属列' }]}
       >
-        <InputNumber style={{ width: 240 }} min={1} precision={0} placeholder="请输入渠道ID所属列" />
+        <InputNumber style={{ width: 130 }} min={1} precision={0} placeholder="请输入渠道ID所属列" />
       </Form.Item>
       <Form.Item
         labelPosition="top"
@@ -77,7 +77,7 @@ const MixedItem = ({
         label="渠道ID集合"
         rule={[{ type: 'string', required: true, message: '请输入渠道ID集合' }]}
       >
-        <Input style={{ width: 240 }} placeholder="请输入渠道ID用 | 进行分隔" />
+        <Input style={{ width: 130 }} placeholder="用 | 进行分隔" />
       </Form.Item>
       <Form.Item
         labelPosition="top"
@@ -85,7 +85,14 @@ const MixedItem = ({
         label="手机号所属列"
         rule={[{ type: 'number', required: true, message: '请输入手机号所属列' }]}
       >
-        <InputNumber style={{ width: 240 }} min={1} precision={0} placeholder="请输入手机号所属列" />
+        <InputNumber style={{ width: 130 }} min={1} precision={0} placeholder="请输入手机号所属列" />
+      </Form.Item>
+      {/** 时间筛选是可选项 **/}
+      <Form.Item labelPosition="top" name="timeRow" label="时间所属列（选填）">
+        <InputNumber style={{ width: 130 }} allowClear min={1} precision={0} placeholder="时间所属列（选填）" />
+      </Form.Item>
+      <Form.Item labelPosition="top" name="timeRange" label="时间区间（选填）">
+        <RangeDateTimePicker placeholder={['开始时间', '结束时间']} allowClear />
       </Form.Item>
       <Form.Item>
         <Button type="danger" onClick={onDelete}>
