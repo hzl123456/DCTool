@@ -127,7 +127,6 @@ const MixedTreatmentPage = () => {
               }
             }
           }
-          console.log('ssss->', exportData);
           // 生成一个 excel
           const worksheet = XLSX.utils.json_to_sheet(exportData);
           XLSX.utils.book_append_sheet(workbook, worksheet, fileName);
