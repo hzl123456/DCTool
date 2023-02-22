@@ -60,7 +60,10 @@ const MixedTreatmentPage = () => {
           for (const text of data) {
             const childData = text.split(dot);
             const channelId = childData[channelRow - 1]!;
-            channelIdSet.add(channelId);
+            // 文件最后存在空行，得到的 channelId 为 undefined 所以要去掉，但是注意不能去掉空字符串的
+            if (channelId !== undefined) {
+              channelIdSet.add(channelId);
+            }
           }
           for (const channelId of channelIdSet.values()) {
             channelIdList.push(channelId);
@@ -125,17 +128,18 @@ const MixedTreatmentPage = () => {
               exportData[i] = {};
             }
             const mapValue = dataMap.get(channelId)!;
+            const channelIdName = `${channelId}（${mapValue.size}）`;
             if (mapValue.size === 0) {
               exportData[i] = {
                 ...exportData[i],
-                [channelId]: null,
+                [channelIdName]: null,
               };
               i++;
             } else {
               for (const phone of mapValue.values()) {
                 exportData[i] = {
                   ...exportData[i],
-                  [channelId]: phone,
+                  [channelIdName]: phone,
                 };
                 // 添加所有的手机号数据
                 totalSet.add(phone);
@@ -150,7 +154,7 @@ const MixedTreatmentPage = () => {
         // 所有的数据集合
         const exportData: any[] = [];
         for (const phone of totalSet.values()) {
-          exportData.push({ [TOTAl_EXP]: phone });
+          exportData.push({ [`${TOTAl_EXP}（${totalSet.size}）`]: phone });
         }
         const worksheet = XLSX.utils.json_to_sheet(exportData);
         XLSX.utils.book_append_sheet(workbook, worksheet, '总计');
