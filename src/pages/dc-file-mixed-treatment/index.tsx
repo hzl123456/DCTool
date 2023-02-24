@@ -13,6 +13,8 @@ import { collectData } from '@common/core/point';
 
 import { sendMessageByWebhook } from '@common/core/notice';
 
+import { getCellWidth } from '@common/utils';
+
 import MixedItem from '@src/pages/dc-file-mixed-treatment/MixedItem';
 
 import './index.scss';
@@ -30,6 +32,7 @@ const MixedTreatmentPage = () => {
     document.title = '杜晨工具-文件渠道混合处理';
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<IMixedData>({ data: [getDefaultItem()] });
   const formBagRef = useRef<IFormBag<IMixedData>>(null);
 
@@ -68,8 +71,8 @@ const MixedTreatmentPage = () => {
           for (const channelId of channelIdSet.values()) {
             channelIdList.push(channelId);
           }
-          // 注意这里需要移除第一行的数据，因为那个是标题
-          channelIds = channelIdList.slice(1, channelIdList.length).join('|');
+          // 根据标题是否存在分割符来判断是否要移除第一行
+          channelIds = channelIdList.slice(data[0]?.includes(dot) ? 1 : 0, channelIdList.length).join('|');
         }
         // 1.根据渠道创建对应的列，并且需要有一个聚合的列
         const dataMap = new Map<string, Set<string>>();
@@ -112,6 +115,7 @@ const MixedTreatmentPage = () => {
   const handleSubmit = useCallback(
     async (values: IMixedData) => {
       const { data: fileValues } = values;
+      setLoading(true);
       try {
         const workbook = XLSX.utils.book_new(); //创建虚拟workbook
         const totalSet = new Set();
@@ -122,6 +126,7 @@ const MixedTreatmentPage = () => {
           const [fileName] = file.name.split('.');
           // 单独每个文件的数据
           const exportData: any[] = [];
+          const colsCellWidth: { wch: number }[] = [];
           for (const channelId of dataMap.keys()) {
             let i = 0;
             if (!exportData[i]) {
@@ -129,6 +134,8 @@ const MixedTreatmentPage = () => {
             }
             const mapValue = dataMap.get(channelId)!;
             const channelIdName = `${channelId}（${mapValue.size}）`;
+            // 根据 channelIdName 和 phone 得到最后的宽度
+            let cellWidth = getCellWidth(channelIdName);
             if (mapValue.size === 0) {
               exportData[i] = {
                 ...exportData[i],
@@ -137,6 +144,7 @@ const MixedTreatmentPage = () => {
               i++;
             } else {
               for (const phone of mapValue.values()) {
+                cellWidth = Math.max(cellWidth, getCellWidth(phone));
                 exportData[i] = {
                   ...exportData[i],
                   [channelIdName]: phone,
@@ -146,9 +154,11 @@ const MixedTreatmentPage = () => {
                 i++;
               }
             }
+            colsCellWidth.push({ wch: cellWidth + 0.5 });
           }
           // 生成一个 excel
           const worksheet = XLSX.utils.json_to_sheet(exportData);
+          worksheet['!cols'] = colsCellWidth;
           XLSX.utils.book_append_sheet(workbook, worksheet, fileName);
         }
         // 所有的数据集合
@@ -157,7 +167,8 @@ const MixedTreatmentPage = () => {
           exportData.push({ [`${TOTAl_EXP}（${totalSet.size}）`]: phone });
         }
         const worksheet = XLSX.utils.json_to_sheet(exportData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, '总计');
+        worksheet['!cols'] = [{ wch: getCellWidth(TOTAl_EXP) + 0.5 }];
+        XLSX.utils.book_append_sheet(workbook, worksheet, TOTAl_EXP);
         // 生成一个 excel 并导出
         XLSX.writeFile(workbook, `文件集合-${dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss')}.xlsx`);
         toast.success('文件渠道混合处理成功，请保存在本地进行查看~');
@@ -173,6 +184,8 @@ const MixedTreatmentPage = () => {
         sendMessageByWebhook(`文件渠道混合处理成功\n文件名称：${fileNameList.join('、')}`);
       } catch (e: any) {
         toast.error(e?.message || '文件渠道混合处理失败，请联系胖虎');
+      } finally {
+        setLoading(false);
       }
     },
     [getFileData]
@@ -208,7 +221,7 @@ const MixedTreatmentPage = () => {
           >
             新增文件
           </Button>
-          <Button htmlType="submit" type="primary">
+          <Button loading={loading} htmlType="submit" type="primary">
             提交
           </Button>
         </Form.Item>

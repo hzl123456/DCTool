@@ -61,7 +61,7 @@ const MixedItem = ({
         label="行分隔符"
         rule={[{ type: 'string', required: true, message: '请输入行分隔符' }]}
       >
-        <Input style={{ width: 130 }} placeholder="请输入行分隔符" />
+        <Input style={{ width: 80 }} placeholder="请输入行分隔符" />
       </Form.Item>
       <Form.Item
         labelPosition="top"
@@ -69,7 +69,7 @@ const MixedItem = ({
         label="渠道ID所属列"
         rule={[{ type: 'number', required: true, message: '请输入渠道ID所属列' }]}
       >
-        <InputNumber style={{ width: 130 }} min={1} precision={0} placeholder="请输入渠道ID所属列" />
+        <InputNumber style={{ width: 100 }} min={1} precision={0} placeholder="请输入渠道ID所属列" />
       </Form.Item>
       <Form.Item labelPosition="top" name="channelIds" label="渠道ID（不填表示所有渠道）">
         <Input style={{ width: 150 }} placeholder="用 | 进行分隔" />
@@ -80,11 +80,11 @@ const MixedItem = ({
         label="手机号所属列"
         rule={[{ type: 'number', required: true, message: '请输入手机号所属列' }]}
       >
-        <InputNumber style={{ width: 130 }} min={1} precision={0} placeholder="请输入手机号所属列" />
+        <InputNumber style={{ width: 100 }} min={1} precision={0} placeholder="请输入手机号所属列" />
       </Form.Item>
       {/** 时间筛选是可选项 **/}
       <Form.Item labelPosition="top" name="timeRow" label="时间所属列（选填）">
-        <InputNumber style={{ width: 130 }} allowClear min={1} precision={0} placeholder="时间所属列（选填）" />
+        <InputNumber style={{ width: 120 }} allowClear min={1} precision={0} placeholder="时间所属列（选填）" />
       </Form.Item>
       <Form.Item labelPosition="top" name="timeRange" label="时间区间（选填）">
         <RangeDateTimePicker placeholder={['开始时间', '结束时间']} allowClear />
