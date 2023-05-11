@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import LargeFileSegmentationPage from './pages/dc-large-file-segmentation';
 import FileDuplicateRemovePage from './pages/dc-file-duplicate-remove';
 import MixedTreatmentPage from './pages/dc-file-mixed-treatment';
+import ManyFileDuplicateRemovePage from './pages/dc-many-file-duplicate-remove';
 import HomePage from './pages/home';
 
 import './index.scss';
@@ -23,6 +24,7 @@ root.render(
       <Route path="/segmentation" element={<LargeFileSegmentationPage />} />
       <Route path="/duplicateRemove" element={<FileDuplicateRemovePage />} />
       <Route path="/mixedTreatment" element={<MixedTreatmentPage />} />
+      <Route path="/manyFileDuplicateRemove" element={<ManyFileDuplicateRemovePage />} />
       <Route path="*" element={<HomePage />} />
     </Routes>
   </HashRouter>

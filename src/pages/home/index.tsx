@@ -10,6 +10,7 @@ const PAGE_DATA = [
   { title: '大型文件分割', path: '/segmentation' },
   { title: '文件去重', path: '/duplicateRemove' },
   { title: '文件渠道混合处理', path: '/mixedTreatment' },
+  { title: '多文件去除重复项', path: '/manyFileDuplicateRemove' },
 ];
 
 const HomePage = () => {
