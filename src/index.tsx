@@ -17,7 +17,7 @@ import './index.scss';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 Bmob.initialize('d22f237ea849bd69', '950109');
-
+console.log('ssss->', 11111);
 root.render(
   <HashRouter>
     <Routes>
