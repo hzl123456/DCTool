@@ -88,12 +88,16 @@ const MixedTreatmentPage = () => {
           // 如果存在 timeRange 的话需要根据时间进行筛选
           if (timeRange.length === 2) {
             try {
-              const time = childData[timeRow - 1]!;
+              let time = childData[timeRow - 1]!;
+              // 这里需要处理一下格式，默认为当天的第一秒
+              if (!time.includes('-')) {
+                time = `${time.slice(0, 4)}-${time.slice(4, 6)}-${time.slice(6, 8)} 00:00:01`;
+              }
               const now = dayjs(time);
               const start = timeRange[0]!;
               const end = timeRange[1]!;
               if (now.isBefore(start) || now.isAfter(end)) {
-                break;
+                continue;
               }
             } catch {
               // do nothing

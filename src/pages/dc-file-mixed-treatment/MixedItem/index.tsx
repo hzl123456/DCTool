@@ -4,8 +4,9 @@
  */
 import type { IMixedItem } from '@src/pages/dc-file-mixed-treatment/types';
 
+import { HelpIcon } from '@qunhe/muya-theme-light';
 import React, { Fragment, memo, useCallback } from 'react';
-import { Button, Form, Input, InputNumber, toast, Upload, RangeDateTimePicker } from '@qunhe/muya-ui';
+import { Button, Form, Input, InputNumber, toast, Upload, RangeDateTimePicker, Tooltip } from '@qunhe/muya-ui';
 import { UploadIcon } from '@qunhe/muya-theme-light';
 
 const MixedItem = ({
@@ -86,7 +87,18 @@ const MixedItem = ({
       <Form.Item labelPosition="top" name="timeRow" label="时间所属列（选填）">
         <InputNumber style={{ width: 120 }} allowClear min={1} precision={0} placeholder="时间所属列（选填）" />
       </Form.Item>
-      <Form.Item labelPosition="top" name="timeRange" label="时间区间（选填）">
+      <Form.Item
+        labelPosition="top"
+        name="timeRange"
+        label={
+          <span>
+            时间区间（选填）
+            <Tooltip title="只有日期的时间格式会被当做为当天的第一秒进行处理，如：20230601 会当做 2023-06-01 00:00:01 进行处理">
+              <HelpIcon />
+            </Tooltip>
+          </span>
+        }
+      >
         <RangeDateTimePicker placeholder={['开始时间', '结束时间']} allowClear />
       </Form.Item>
       <Form.Item>
