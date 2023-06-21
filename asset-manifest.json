@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dctool/static/css/main.87d7e3bc.css",
-    "main.js": "/dctool/static/js/main.fe5bd135.js",
+    "main.js": "/dctool/static/js/main.ce9125ad.js",
     "static/js/787.b3086623.chunk.js": "/dctool/static/js/787.b3086623.chunk.js",
     "index.html": "/dctool/index.html",
     "main.87d7e3bc.css.map": "/dctool/static/css/main.87d7e3bc.css.map",
-    "main.fe5bd135.js.map": "/dctool/static/js/main.fe5bd135.js.map",
+    "main.ce9125ad.js.map": "/dctool/static/js/main.ce9125ad.js.map",
     "787.b3086623.chunk.js.map": "/dctool/static/js/787.b3086623.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.87d7e3bc.css",
-    "static/js/main.fe5bd135.js"
+    "static/js/main.ce9125ad.js"
   ]
 }
