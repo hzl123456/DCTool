@@ -1,12 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import Bmob from 'hydrogen-js-sdk';
-
-import { Button, Input, Result, toast } from '@qunhe/muya-ui';
-
-import { checkLogin } from '@common/core/notice';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -18,60 +14,42 @@ import HomePage from './pages/home';
 
 import './index.scss';
 
+// @ts-ignore
+
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 Bmob.initialize('d22f237ea849bd69', '950109');
 
-const localPassword = localStorage.getItem('localPassword') || '';
+const ENTER_KEY = 'enterAnimation:' + new Date().getDate();
 
 const App = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState<string>('');
+  const [hasShow, setHasShow] = useState<boolean>(localStorage.getItem(ENTER_KEY) === 'true');
 
-  useEffect(() => {
-    checkLogin(localPassword).then(setIsLogin);
-  }, []);
-
-  const handleSubmit = useCallback(async () => {
-    setLoading(true);
-    const isLogin = await checkLogin(value);
-    if (!isLogin) {
-      toast.error('使用密码输入错误');
-    } else {
-      localStorage.setItem('localPassword', value);
-      setIsLogin(true);
-    }
-    setLoading(false);
-  }, [value]);
-
-  if (!isLogin) {
-    return (
-      <Result
-        style={{ marginTop: 120 }}
-        type="forbidden"
-        title="暂无访问权限"
-        extra={
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Input value={value} onChange={(e) => setValue(e.target.value)} placeholder="请输入使用密码" width={160} />
-            <Button style={{ marginLeft: 10 }} type="primary" loading={loading} onClick={handleSubmit}>
-              提交
-            </Button>
-          </div>
-        }
-      />
-    );
-  }
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/segmentation" element={<LargeFileSegmentationPage />} />
-        <Route path="/duplicateRemove" element={<FileDuplicateRemovePage />} />
-        <Route path="/mixedTreatment" element={<MixedTreatmentPage />} />
-        <Route path="/manyFileDuplicateRemove" element={<ManyFileDuplicateRemovePage />} />
-        <Route path="*" element={<HomePage />} />
-      </Routes>
-    </HashRouter>
+    <>
+      {!hasShow && (
+        <iframe
+          title="tree"
+          style={{ position: 'fixed', zIndex: 10, top: 0, left: 0, width: '100vw', height: '100vh', border: 'none' }}
+          src="https://qhstaticssl.kujiale.com/text/html/1700734891325/tree.html"
+          onLoad={() => {
+            setTimeout(() => {
+              setHasShow(true);
+              localStorage.setItem(ENTER_KEY, 'true');
+            }, 5000);
+          }}
+        />
+      )}
+      <HashRouter>
+        <Routes>
+          <Route path="/segmentation" element={<LargeFileSegmentationPage />} />
+          <Route path="/duplicateRemove" element={<FileDuplicateRemovePage />} />
+          <Route path="/mixedTreatment" element={<MixedTreatmentPage />} />
+          <Route path="/manyFileDuplicateRemove" element={<ManyFileDuplicateRemovePage />} />
+          <Route path="*" element={<HomePage />} />
+        </Routes>
+      </HashRouter>
+    </>
   );
 };
 
