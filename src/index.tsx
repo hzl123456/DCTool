@@ -23,6 +23,7 @@ Bmob.initialize('d22f237ea849bd69', '950109');
 const TreeList = [
   { url: 'https://qhstaticssl.kujiale.com/text/html/1700734891325/tree.html', time: 6 },
   { url: 'https://qhstaticssl.kujiale.com/text/html/1700789041347/tree.html', time: 3 },
+  { url: 'https://qhstaticssl.kujiale.com/text/html/1700796319938/tree.html', time: 10 },
 ];
 
 const App = () => {
