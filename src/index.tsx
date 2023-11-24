@@ -27,8 +27,8 @@ const TreeList = [
 ];
 
 const App = () => {
-  // 五分之一的概率
-  const [showTree, setShowTree] = useState<boolean>(random(1, 5) === 5);
+  // 三分之一的概率
+  const [showTree, setShowTree] = useState<boolean>(random(1, 3) === 3);
 
   // 随机出现一棵树
   const treeData = useMemo(() => TreeList[random(0, TreeList.length - 1)], []);
