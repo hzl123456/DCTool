@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import Bmob from 'hydrogen-js-sdk';
+
+import { random } from 'lodash-es';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -14,30 +16,30 @@ import HomePage from './pages/home';
 
 import './index.scss';
 
-// @ts-ignore
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 Bmob.initialize('d22f237ea849bd69', '950109');
 
-const ENTER_KEY = 'enterAnimation:' + new Date().getDate();
+const TreeList = [
+  { url: 'https://qhstaticssl.kujiale.com/text/html/1700734891325/tree.html', time: 6 },
+  { url: 'https://qhstaticssl.kujiale.com/text/html/1700789041347/tree.html', time: 3 },
+];
 
 const App = () => {
-  const [hasShow, setHasShow] = useState<boolean>(localStorage.getItem(ENTER_KEY) === 'true');
+  // 五分之一的概率
+  const [showTree, setShowTree] = useState<boolean>(random(1, 5) === 5);
+
+  // 随机出现一棵树
+  const treeData = useMemo(() => TreeList[random(0, TreeList.length - 1)], []);
 
   return (
     <>
-      {!hasShow && (
+      {showTree && !!treeData && (
         <iframe
           title="tree"
           style={{ position: 'fixed', zIndex: 10, top: 0, left: 0, width: '100vw', height: '100vh', border: 'none' }}
-          src="https://qhstaticssl.kujiale.com/text/html/1700734891325/tree.html"
-          onLoad={() => {
-            setTimeout(() => {
-              setHasShow(true);
-              localStorage.setItem(ENTER_KEY, 'true');
-            }, 5000);
-          }}
+          src={treeData.url}
+          onLoad={() => setTimeout(() => setShowTree(false), treeData.time * 1000)}
         />
       )}
       <HashRouter>
