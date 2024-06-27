@@ -21,7 +21,7 @@ export const sendMessageByWebhook = async (content: string) => {
 /**
  * 校验使用密码
  * **/
-export const checkLogin = async (_content: string) => {
+export const checkLogin = async (content: string) => {
   // try {
   //   const response = await axios.post<boolean>(
   //     'https://service-3ql3n2we-1301249903.gz.apigw.tencentcs.com/release/checkLogin',
@@ -33,5 +33,5 @@ export const checkLogin = async (_content: string) => {
   // } catch {
   //   return true;
   // }
-  return true;
+  return content === '930522';
 };
