@@ -49,12 +49,25 @@ const MixedTreatmentPage = () => {
         phoneRow, // 手机号列
         timeRow = 1,
         timeRange = [],
+        deleteRegex,
       } = data;
       const file = targetFile!.originFile as File;
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.onload = () => {
-        const data: string[] = (fileReader.result as string).split('\n');
+        const loadData: string[] = (fileReader.result as string).split('\n');
+        let data: string[] = [];
+        if (!!deleteRegex) {
+          // 存在删除配置，需要剔除删除行
+          for (const text of loadData) {
+            if (!text.includes(deleteRegex)) {
+              data.push(text);
+            }
+          }
+        } else {
+          // 不存在删除配置，使用原始数据
+          data = loadData;
+        }
         // 0.如果 inputChannelIds 没有填写的话，先筛选出所有的渠道，注意移除第一行数据
         let channelIds = inputChannelIds;
         if (!channelIds) {

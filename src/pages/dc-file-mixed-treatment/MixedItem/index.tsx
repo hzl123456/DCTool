@@ -101,6 +101,24 @@ const MixedItem = ({
       >
         <RangeDateTimePicker placeholder={['开始时间', '结束时间']} allowClear />
       </Form.Item>
+      <Form.Item
+        labelPosition="top"
+        name="deleteRegex"
+        label={
+          <span>
+            剔除行匹配（选填）
+            <Tooltip
+              title={
+                '如果需要剔除某一行的数据，可以在这里输入该行匹配的值，如：需要剔除包含 "\\N|" 字符串的行数据，就在输入框内输入 "\\N|"'
+              }
+            >
+              <HelpIcon />
+            </Tooltip>
+          </span>
+        }
+      >
+        <Input style={{ width: 200 }} placeholder="剔除行匹配（选填）" />
+      </Form.Item>
       <Form.Item>
         <Button type="danger" onClick={onDelete}>
           删除
