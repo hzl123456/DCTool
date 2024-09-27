@@ -50,12 +50,17 @@ const MixedTreatmentPage = () => {
         timeRow = 1,
         timeRange = [],
         deleteRegex,
+        includeTitle, // 是否包含标题
       } = data;
       const file = targetFile!.originFile as File;
       const fileReader = new FileReader();
       fileReader.readAsText(file);
       fileReader.onload = () => {
-        const loadData: string[] = (fileReader.result as string).split('\n');
+        let loadData: string[] = (fileReader.result as string).split('\n');
+        // 如果存在标题的话需要移除第一行数据
+        if (includeTitle) {
+          loadData = loadData.slice(1, loadData.length);
+        }
         let data: string[] = [];
         if (!!deleteRegex) {
           // 存在删除配置，需要剔除删除行
@@ -85,7 +90,7 @@ const MixedTreatmentPage = () => {
             channelIdList.push(channelId);
           }
           // 根据标题是否存在分割符来判断是否要移除第一行
-          channelIds = channelIdList.slice(data[0]?.includes(dot) ? 1 : 0, channelIdList.length).join('|');
+          channelIds = channelIdList.join('|');
         }
         // 1.根据渠道创建对应的列，并且需要有一个聚合的列
         const dataMap = new Map<string, Set<string>>();

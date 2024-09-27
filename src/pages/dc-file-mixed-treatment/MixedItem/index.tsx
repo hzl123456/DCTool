@@ -6,7 +6,7 @@ import type { IMixedItem } from '@src/pages/dc-file-mixed-treatment/types';
 
 import { HelpIcon } from '@qunhe/muya-theme-light';
 import React, { Fragment, memo, useCallback } from 'react';
-import { Button, Form, Input, InputNumber, toast, Upload, RangeDateTimePicker, Tooltip } from '@qunhe/muya-ui';
+import { Button, Form, Input, InputNumber, toast, Upload, RangeDateTimePicker, Tooltip, Switch } from '@qunhe/muya-ui';
 import { UploadIcon } from '@qunhe/muya-theme-light';
 
 const MixedItem = ({
@@ -118,6 +118,9 @@ const MixedItem = ({
         }
       >
         <Input style={{ width: 200 }} placeholder="剔除行匹配（选填）" />
+      </Form.Item>
+      <Form.Item labelPosition="top" name="includeTitle" label="是否存在标题">
+        <Switch />
       </Form.Item>
       <Form.Item>
         <Button type="danger" onClick={onDelete}>

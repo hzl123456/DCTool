@@ -18,4 +18,5 @@ export interface IMixedItem {
   timeRow?: number; // 时间的区间
   timeRange?: Dayjs[]; // 时间范围
   deleteRegex?: string; // 删除的正则
+  includeTitle?: boolean; // 是否包含标题
 }
